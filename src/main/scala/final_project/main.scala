@@ -16,40 +16,18 @@ object main{
  sc.parallelize(Seq(Edge(1L, 2L), Edge(2L,3L), Edge(5L,3L), Edge(3L,4L),
                     Edge(4L,5L), Edge(5L,1L), Edge(1L,3L), Edge(1L,4L)))
  val g_in = Graph.fromEdges[(Int, Long), Int](edges, (0, 0L))
-var z = k
- var k = g_in.mapEdges((id) => 1)
 
- var k_new = k.aggregateMessages[(Int)](
-     d => { // Map Function
-       if (d.dstId == 3 && d.srcId == 5 ){
-       println("TRUE");
-          z = z.mapEdges(
-            id => if (id.srcId == d.srcId && id.dstId == d.dstId) (2) else (id.attr)
-          );
-          d.sendToDst(5);
-          d.sendToSrc(1);
-       } else {
-       d.sendToDst(10);
-       d.sendToSrc(10);
-       }
-       },
-     (a,b) => (if (a > b) a else (b))
- )
- println("over");
-k_new.collect()
+var k = result
+val v_in = result.vertices.filter({case (id, x) => (x._1 == 1)}).collect()
+for (x <- v_in){
+  k = k.mapEdges(
+   //id => if ((id.srcId == 1 && id.dstId == 2) || (id.dstId == 2 && id.srcId == 1)) (1) else (id.attr)
+   id => if ((id.srcId == x._2._2 && id.dstId == x._1) || (id.dstId == x._2._2 && id.srcId == x._1)) (1) else (id.attr)
+   )
+}
+
+
 k.edges.collect()
-
- k = k.mapEdges(
-  id => if (id.srcId == 1 && id.dstId == 2) (2) else (id.attr)
- )
-k.edges.collect()
-
- val neighbors = g.triplets.collect{
-   case t if (t.srcId == 2) => t.dstId
-   case l if (l.dstId == 2) => l.srcId}.collect()
- val r = scala.util.Random
- neighbors(r.nextInt(neighbors.size))
-
 
 */
   val rootLogger = Logger.getRootLogger()
@@ -92,11 +70,6 @@ select a random neighbors
           (a,b) => (if (a._3 > b._3) a else (b))
       )
       var g2 = Graph(v_propose, g.edges)
-      println("********g2***********")
-      println("********round #" + counter)
-      g2.vertices.collect()
-      g2.edges.collect()
-      println("*********end g2**********\n\n")
 
       //propose and accept
       var v_p = g2.aggregateMessages[(Int, Long, Float, Int)]( //(status, from, value, 0or1)
@@ -112,11 +85,6 @@ select a random neighbors
         (a,b) => (if (a._3 > -1) {if ((a._3) < (b._3)) (b) else (a) } else b) //select
       )
       var g3= Graph(v_p, g.edges)
-      println("********g3***********")
-      println("********round #" + counter)
-      g3.vertices.collect()
-      g3.edges.collect()
-      println("*********end g3**********\n\n")
 
       //fitler edges
       var v_deactivate = g3.aggregateMessages[(Int, Long)]( //(status, otherVertex)
@@ -146,10 +114,20 @@ select a random neighbors
       g.cache()
       active_v = g.vertices.filter({case (id, x) => (x._1 == 0)}).count()
     }
+
+    /* relabeled the edge that is selected
+    */
+    val v_in = g.vertices.filter({case (id, x) => (x._1 == 1)}).collect()
+    for (x <- v_in){
+      g = g.mapEdges(
+       id => if ((id.srcId == x._2._2 && id.dstId == x._1) || (id.dstId == x._2._2 && id.srcId == x._1)) (1) else (id.attr)
+       )
+    }
+
     return g
   }
 
-var result = Israli(g_in)
+//var result = Israli(g_in)
 
 
   def main(args: Array[String]) {
@@ -160,22 +138,22 @@ var result = Israli(g_in)
 /* You can either use sc or spark */
 
     if(args.length == 0) {
-      println("Usage: final_projec = undirectgraph.csv")
+      println("Usage: final_projec = undirectgraph.csv saveFilePath")
       sys.exit(1)
     }
 
       val startTimeMillis = System.currentTimeMillis()
       val edges = sc.textFile(args(1)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
-      val g = Graph.fromEdges[Int, Int](edges, 0, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
+      val g = Graph.fromEdges[(Int, Long), Int](edges, (0, 0L), edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
 
-      val g2 = LubyMIS(g)
+      val g2 = Israli(g)
 
       val endTimeMillis = System.currentTimeMillis()
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("==================================")
-      println("Luby's algorithm completed in " + durationSeconds + "s.")
+      println("Israli's algorithm completed in " + durationSeconds + "s.")
       println("==================================")
-
+//val g2df = spark.createDataFrame(result.vertices)
       val g2df = spark.createDataFrame(g2.vertices)
       g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(2))
 
