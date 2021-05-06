@@ -1,5 +1,6 @@
 package final_project
 
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.SparkContext
@@ -13,8 +14,8 @@ object main{
 
 /* example undirected graph
  val edges: RDD[Edge[Int]] =
- sc.parallelize(Seq(Edge(1L, 2L), Edge(2L,3L), Edge(5L,3L), Edge(3L,4L),
-                    Edge(4L,5L), Edge(5L,1L), Edge(1L,3L), Edge(1L,4L)))
+ sc.parallelize(Seq(Edge(1L, 2L,1), Edge(2L,3L,1), Edge(5L,3L,0), Edge(3L,4L,1),
+                    Edge(4L,5L,1), Edge(5L,1L,1), Edge(1L,3L,1), Edge(1L,4L,0)))
  val g_in = Graph.fromEdges[(Int, Long), Int](edges, (0, 0L))
 
 var k = result
@@ -39,7 +40,7 @@ k.edges.collect()
 
 /*
 select a random neighbors
-*/
+
   def select_neighbor(g_in: Graph[Int, Int], vertex: VertexId): VertexId = {
     val r = scala.util.Random
     val neighbors = g.triplets.collect{
@@ -47,6 +48,7 @@ select a random neighbors
       case l if (l.dstId == vertex) => l.srcId}.collect()
     return(neighbors(r.nextInt(neighbors.size)))
   }
+*/
 
   def Israli(g_in: Graph[(Int, Long), Int]): Graph[(Int, Long), Int] = {
     val r = scala.util.Random
@@ -138,13 +140,13 @@ select a random neighbors
 /* You can either use sc or spark */
 
     if(args.length == 0) {
-      println("Usage: final_projec = undirectgraph.csv saveFilePath")
+      println("Usage: final_project = undirectgraph.csv saveFilePath")
       sys.exit(1)
     }
 
       val startTimeMillis = System.currentTimeMillis()
       val edges = sc.textFile(args(1)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
-      val g = Graph.fromEdges[(Int, Long), Int](edges, (0, 0L), edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
+      val g = Graph.fromEdges[Int, Int](edges, 0, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
 
       val g2 = Israli(g)
 
@@ -153,9 +155,10 @@ select a random neighbors
       println("==================================")
       println("Israli's algorithm completed in " + durationSeconds + "s.")
       println("==================================")
-//val g2df = spark.createDataFrame(result.vertices)
-      val g2df = spark.createDataFrame(g2.vertices)
+      var g2df = spark.createDataFrame(g2.edges.filter({case (id) => (id.attr == 1)}))
+      g2df = g2df.drop(g2df.columns.last)               
       g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(2))
+
 
   }
 }
