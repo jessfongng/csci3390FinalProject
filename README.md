@@ -43,10 +43,12 @@ spark-submit --class "final_project.main" --master "local[*]" target/scala-2.12/
 The verifier accepts 2 file paths as arguments, the first being the path to the file containing the initial graph and the second being the path to the file containing the matching. It can be ran locally with the following command (keep in mind that your file paths may be different):
 ```
 // Linux
-spark-submit --class final_project.verifier --master local[*] --class final_project.verifier data/log_normal_100.csv data/log_normal_100_matching.csv
+spark-submit --master local[*] --class final_project.verifier target/scala-2.12/final_project_2.12-1.0.jar graph.csv log_normal_result/matching.csv/
+
 
 // Unix
-spark-submit --class "final_project.verifier" --master "local[*]" --class "final_project.verifier" data/log_normal_100.csv data/log_normal_100_matching.csv
+spark-submit --master local[*] --class "final_project.verifier" target/scala-2.12/final_project_2.12-1.0.jar graph.csv log_normal_result/matching.csv/
+
 ```
 
 ## Deliverables
