@@ -3,14 +3,14 @@
 ## Graph matching
 For the final project, you are provided 6 CSV files, each containing an undirected graph, which can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). The files are as follows:  
 
-|           File name           |        Number of edges       |       # Matching       |
-| ------------------------------| ---------------------------- | ---------------------------- |
-| com-orkut.ungraph.csv         | 117185083                    |-|
-| twitter_original_edges.csv    | 63555749                     |-|
-| soc-LiveJournal1.csv          | 42851237                     |-|
-| soc-pokec-relationships.csv   | 22301964                     |-|
-| musae_ENGB_edges.csv          | 35324                        |2294|
-| log_normal_100.csv            | 2671                         | 37| 
+|           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
+| ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
+| com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
+| twitter_original_edges.csv    | 63555749                     |-| - | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
+| soc-pokec-relationships.csv   | 22301964                     |-| - | -|
+| musae_ENGB_edges.csv          | 35324                        |2294| CPU | 9|
+| log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
 Your goal is to compute a matching as large as possible for each graph. 
 
