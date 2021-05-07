@@ -16,7 +16,7 @@ object main{
   Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
   Logger.getLogger("org.spark-project").setLevel(Level.WARN)
 
-
+  /*
   def Israli(g_in: Graph[(Int, Long), Int]): Graph[(Int, Long), Int] = {
     val r = scala.util.Random
     var active_v = 2L
@@ -96,6 +96,85 @@ object main{
 
     return g
   }
+  */
+  
+  def LubyMIS(g_in: Graph[Float, Int]): Graph[Float, Int] = {
+    var active_v = 2L
+    var counter = 0
+    val r = scala.util.Random
+    val i = g_in.mapEdges((i) => (0, 0F)) //(status, float)
+	/*
+		active = -1
+		deactivate = 0
+		selected = 1
+	*/
+	var g = i.mapVertices((id, i) => (-1F, 0L)) //(float, to)
+    while (active_v > 1 && counter < 3) { // remaining edges
+      counter += 1
+      g = g.mapEdges((i) => (i.attr._1, r.nextFloat)) //give active edges random number
+      var v_in = g.aggregateMessages[(Float, Long)]( //return 1 for all selected vertices
+        d => { // Map Function
+			if (d.attr._1 == 1) { //edge is already selected
+				d.sendToDst(1F, d.dstAttr._2); 
+				d.sendToSrc(1F, d.srcAttr._2);
+			} else if (d.srcAttr._1 == 1F || d.dstAttr._1 == 1F) { // one of the vertices is selected
+				d.sendToDst(d.dstAttr._1, d.dstAttr._2);
+				d.sendToSrc(d.srcAttr._1, d.srcAttr._2);
+			} else {
+	            d.sendToDst(d.attr._2, 0L);
+	            d.sendToSrc(d.attr._2, 0L);
+			}
+           
+          },
+          (a,b) => (if (a._1 > b._1) a else b)//take the max (not active = 1)
+      )
+      var g2 = Graph(v_in, g.edges) //some how the float of the edge keeps changing
+      var v_deactivate = g2.aggregateMessages[(Float, Long)]( //return neighbors of selected
+        d => {
+			if (d.attr._1 == 1) {//already active
+				d.sendToDst(1F, d.dstAttr._2); 
+				d.sendToSrc(1F, d.srcAttr._2);
+			} 
+			
+			else if (d.srcAttr._1 == 1F || d.dstAttr._1 == 1F) { // one of the vertices is selected
+				d.sendToDst(if(d.srcAttr._1 == 1F) (0F, 0L) else (1F, d.dstAttr._2)); 
+				d.sendToSrc(if(d.dstAttr._1 == 1F) (0F, 0L) else (1F, d.srcAttr._2));
+			} 
+			
+			else {
+			
+				if (d.dstAttr._1 == d.srcAttr._1) {
+					d.sendToDst(1F, d.srcId);
+					d.sendToSrc(1F, d.dstId);
+				} else {
+					d.sendToDst(-1F, 0L);
+					d.sendToSrc(-1F, 0L);
+				}
+			}
+			
+            },
+            (a,b) => (if (a._1 > b._1) a else b) 
+      )
+
+      g = Graph(v_deactivate, g2.edges)
+      var v = g.vertices.filter({case (id, x) => (x._1 == 1F)}).collect()
+      for (x <- v){
+        g = g.mapEdges(
+         id => if ((id.srcId.toLong == x._2._2 && id.dstId.toLong == x._1) || (id.dstId.toLong == x._2._2 && id.srcId.toLong == x._1)) (1, 0F) else (id.attr._1, 0F)
+         )
+      }
+      g.cache()
+      active_v = g.vertices.filter({case (id, i) => (i._1 == -1F)} ).count()
+      println("***********************************************")
+      println("Iteration# =" + counter + "remaining vertices = " + active_v)
+      println("***********************************************")
+    }
+    println("***********************************************")
+    println("#Iteration = " + counter)
+    println("***********************************************")
+	val ans = g.mapEdges((i) => i.attr._1).mapVertices((id, i) => i._1)
+    return ans
+  }
 
   def main(args: Array[String]) {
 	  /*
@@ -121,29 +200,19 @@ object main{
       sys.exit(1)
     }
 
-      val startTimeMillis = System.currentTimeMillis()
-      val edges = sc.textFile(args(0)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
-      val g = Graph.fromEdges[(Int, Long), Int](edges, (0, 0L), edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
-      
-      var g2 = Israli(g)
-	  
-      var v_in = g2.vertices.filter({case (id, x) => (x._1 == 1)}).collect()
-      for (x <- v_in){
-        g2 = g2.mapEdges(
-         id => if ((id.srcId == x._2._2 && id.dstId == x._1) || (id.dstId == x._2._2 && id.srcId == x._1)) (1) else (id.attr)
-         )
-      }
-	  
-	  
-      val endTimeMillis = System.currentTimeMillis()
-      val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
-      println("==================================")
-      println("Israli's algorithm completed in " + durationSeconds + "s.")
-      println("==================================")
-	  
-      var g2df = spark.createDataFrame(g2.edges.filter({case (id) => (id.attr == 1)}))
-      g2df = g2df.drop(g2df.columns.last)               
-      g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(2))
+    val startTimeMillis = System.currentTimeMillis()
+    val edges = sc.textFile(args(1)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
+    val g = Graph.fromEdges[Float, Int](edges, 0F, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
+    val g2 = LubyMIS(g)
+
+    val endTimeMillis = System.currentTimeMillis()
+    val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
+    println("==================================")
+    println("Luby's algorithm completed in " + durationSeconds + "s.")
+    println("==================================")
+    var g2df = spark.createDataFrame(g2.edges.filter({case (id) => (id.attr == 1)}))
+    g2df = g2df.drop(g2df.columns.last)               
+    g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(2))
 	  
 
 
