@@ -109,6 +109,7 @@ object main{
 		selected = 1
 	*/
     while (active_v > 1) { // remaining edges
+	  counter += 1
       g = g.mapEdges((i) => (i.attr._1, r.nextFloat)) //give active edges random number
       var v_in = g.aggregateMessages[(Float, Long)]( 
         d => { // Map Function
