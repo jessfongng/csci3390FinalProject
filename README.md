@@ -10,7 +10,7 @@ For the final project, you are provided 6 CSV files, each containing an undirect
 | soc-LiveJournal1.csv          | 42851237                     |-|
 | soc-pokec-relationships.csv   | 22301964                     |-|
 | musae_ENGB_edges.csv          | 35324                        |-|
-| log_normal_100.csv            | 2671                         | 37| 
+| log_normal_100.csv            | 2671                         | 38| 
 
 Your goal is to compute a matching as large as possible for each graph. 
 
