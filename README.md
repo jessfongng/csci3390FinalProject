@@ -1,7 +1,5 @@
 # Large Scale Data Processing: Final Project
-## Compile
-`sbt clean`
-`spark-submit --class "final_project.main" --master "local[*]" target/scala-2.12/final_project_2.12-1.0.jar file.csv directory `
+## Authors: Jessica Fong Ng & Qingwei Meng`
 ## Graph matching
 For the final project, you are provided 6 CSV files, each containing an undirected graph, which can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). The files are as follows:  
 
@@ -32,6 +30,16 @@ For the final project, you will need to write everything from scratch. Feel free
 ```
 sbt clean package
 ```  
+The function accetps 2 file path as arguments, the first being the path to the file containing the initial graph and the second being the path to output graph.  It can be ran locally with the following command (keep in mind that your file paths may be different):
+```
+//Linux
+spark-submit --class final_project.main --master local[*] target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output_graph]
+
+//Unix
+spark-submit --class "final_project.main" --master "local[*]" target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output_graph]
+
+```
+
 The verifier accepts 2 file paths as arguments, the first being the path to the file containing the initial graph and the second being the path to the file containing the matching. It can be ran locally with the following command (keep in mind that your file paths may be different):
 ```
 // Linux
