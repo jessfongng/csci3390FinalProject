@@ -157,12 +157,14 @@ object main{
       )
 
       g = Graph(v_deactivate, g2.edges)
+	  /*
       var v = g.vertices.filter({case (id, x) => (x._1 == 1F)}).collect()
       for (x <- v){
         g = g.mapEdges(
          id => if ((id.srcId.toLong == x._2._2 && id.dstId.toLong == x._1) || (id.dstId.toLong == x._2._2 && id.srcId.toLong == x._1)) (1, 0F) else (id.attr._1, 0F)
          )
       }
+	  */
       g.cache()
       active_v = g.vertices.filter({case (id, i) => (i._1 == -1F)} ).count()
       println("***********************************************")
@@ -172,6 +174,14 @@ object main{
     println("***********************************************")
     println("#Iteration = " + counter)
     println("***********************************************")
+	
+    var v = g.vertices.filter({case (id, x) => (x._1 == 1F)}).collect()
+    for (x <- v){
+      g = g.mapEdges(
+       id => if ((id.srcId.toLong == x._2._2 && id.dstId.toLong == x._1) || (id.dstId.toLong == x._2._2 && id.srcId.toLong == x._1)) (1, 0F) else (id.attr._1, 0F)
+       )
+    }
+	
 	val ans = g.mapEdges((i) => i.attr._1).mapVertices((id, i) => i._1)
     return ans
   }
