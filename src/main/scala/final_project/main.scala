@@ -201,7 +201,7 @@ object main{
     }
 
     val startTimeMillis = System.currentTimeMillis()
-    val edges = sc.textFile(args(1)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
+    val edges = sc.textFile(args(0)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
     val g = Graph.fromEdges[Float, Int](edges, 0F, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
     val g2 = LubyMIS(g)
 
@@ -212,7 +212,7 @@ object main{
     println("==================================")
     var g2df = spark.createDataFrame(g2.edges.filter({case (id) => (id.attr == 1)}))
     g2df = g2df.drop(g2df.columns.last)               
-    g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(2))
+    g2df.coalesce(1).write.format("csv").mode("overwrite").save(args(1))
 	  
 
 
