@@ -62,7 +62,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
   * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
 
-* We are using a modification of the Luby 
+* We are using a modification of Bidding Variant of the Luby. The pseudocode shows below. 
 
 ## Grading policy
 * Quality of matchings (40%)
