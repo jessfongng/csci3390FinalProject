@@ -1,7 +1,8 @@
 # Large Scale Data Processing: Final Project
 ## Authors: Jessica Fong Ng & Qingwei Meng
 ## Graph matching
-For the final project, you are provided 6 CSV files, each containing an undirected graph, which can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). The files are as follows:  
+The project implements a variation of the Bidding Variant of the Luby algorithm to find a maximal matching. The graphs that we used to generate these result can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). 
+### Result
 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
@@ -12,7 +13,7 @@ For the final project, you are provided 6 CSV files, each containing an undirect
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
-All files had been verified through the verifier.
+All files had been verified through the verifier. They are contained in a `csci3390_final_project_JFQM_result.zip` in the github repository. 
 
 ### Input format
 Each input file consists of multiple lines, where each line contains 2 numbers that denote an undirected edge. For example, the input below is a graph with 3 edges.  
@@ -62,7 +63,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
   * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
 
-* We are using a modification of Bidding Variant of the Luby. The pseudocode shows below. 
+* We are using a modification of Bidding Variant of the Luby. The pseudocode is shown below. 
 ```
 R = {}
 while (there is active edges) {
@@ -101,21 +102,4 @@ It is worth noticed that the #bits needed increase with the number of edges. If 
     * Novelty
     * Completeness
     * Readability
-* Presentation (15%)
-* Formatting (10%)
-  * If the format of your submission does not adhere to the instructions (e.g. output file naming conventions), points will be deducted in this category.
 
-## Submission via GitHub
-Delete your project's current **README.md** file (the one you're reading right now) and include your report as a new **README.md** file in the project root directory. Have no fear—the README with the project description is always available for reading in the template repository you created your repository from. For more information on READMEs, feel free to visit [this page](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-readmes) in the GitHub Docs. You'll be writing in [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown). Be sure that your repository is up to date and you have pushed all of your project's code. When you're ready to submit, simply provide the link to your repository in the Canvas assignment's submission.
-
-## You must do the following to receive full credit:
-1. Create your report in the ``README.md`` and push it to your repo.
-2. In the report, you must include your (and any partner's) full name in addition to any collaborators.
-3. Submit a link to your repo in the Canvas assignment.
-
-## Late submission penalties
-Beginning with the minute after the deadline, your submission will be docked a full letter grade (10%) for every 
-day that it is late. For example, if the assignment is due at 11:59 PM EST on Friday and you submit at 3:00 AM EST on Sunday,
-then you will be docked 20% and the maximum grade you could receive on that assignment is an 80%. 
-Late penalties are calculated from the last commit in the Git log.
-**If you make a commit more than 48 hours after the deadline, you will receive a 0.**
