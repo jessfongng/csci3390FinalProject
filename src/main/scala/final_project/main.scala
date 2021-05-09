@@ -69,7 +69,21 @@ object main{
 	
     return g
   }
+def augmenting(g_matching:Graph[(Float, Long), (Int, Float)]):Graph[(Float, Long), (Int, Float)]={
 
+  // Change vertices
+  val vertices = g_matching.vertices.map(vid=>{
+    val r = scala.util.Random
+    (vid._1,r.nextInt(4))
+  })
+
+  // g is the new graph with changed vertices
+  val g = Graph(vertices,g_matching.edges)
+
+  // You may want to delete the original g_matching here
+
+  return g_matching
+}
   def main(args: Array[String]) {
 
     val conf = new SparkConf().setAppName("final_project")
