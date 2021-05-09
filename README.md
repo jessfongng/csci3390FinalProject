@@ -62,8 +62,8 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
   * An estimate of the amount of computation used for each test case. For example, "the program runs for 15 minutes on a 2x4 N1 core CPU in GCP." If you happen to be executing mulitple algorithms on a test case, report the total running time.
   * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
-
-* We are using a modification of Bidding Variant of the Luby. The pseudocode is shown below. 
+#### Implementatino of Bidding Variant of Luby Algorithm
+* We are using a modification of Bidding Variant of Luby Algorithm. The pseudocode is shown below. 
 ```
 R = {}
 while (there is active edges) {
@@ -76,7 +76,7 @@ while (there is active edges) {
   }
 }
 ```
-There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
+* There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
 |           File name           |        Number of edges       |       Method of Random Number       | # Bits (only consider the type of the number)|
 | ------------------------------| ---------------------------- | ---------------------- | ---------------------- |
 | log_normal_100.csv| 2671  | Float| 32|
@@ -85,7 +85,7 @@ There is an implementation problem with assigning random number when applying th
 | soc-LiveJournal1.csv | 42851237 | (Double, Double)| 128|
 | twitter_original_edges.csv | 63555749 | (Double, Double)| 128|
 | com-orkut.ungraph.csv | 117185083 | -| -|
-It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. 
+* It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. 
 
 * Advantage 
 
