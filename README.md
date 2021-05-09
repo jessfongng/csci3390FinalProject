@@ -67,7 +67,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 R = {}
 while (there is active edges) {
  for each edges e {
-  generate a random number b_e = \[0, 1)
+  generate a random number b_e = [0, 1)
   send b_e to each vertices
   if b_e is equal on both vertices 
     add the edge e to R
