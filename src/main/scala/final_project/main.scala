@@ -16,88 +16,11 @@ object main{
   Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
   Logger.getLogger("org.spark-project").setLevel(Level.WARN)
 
-  /*
-  def Israli(g_in: Graph[(Int, Long), Int]): Graph[(Int, Long), Int] = {
-    val r = scala.util.Random
-    var active_v = 2L
-    var g = g_in.mapVertices((i, from) => (0, -1L)) //everyone is not selected
-    g = g.mapEdges((id) => 0) //no selected
-    var counter = 0
-    while (active_v > 1) {
-    counter+=1;
-      //decide to propose to who
-      var v_propose = g.aggregateMessages[(Int, Long, Float, Int)]( //(status, to, random_value, random int)
-          d => { // Map Function
-            if (d.dstAttr._1 == 1 || d.srcAttr._1 == 1) { // vertex used
-              d.sendToDst((d.dstAttr._1, d.dstAttr._2, -1F, -1));
-              d.sendToSrc((d.srcAttr._1, d.srcAttr._2, -1F, -1));
-            } else {
-              d.sendToDst((d.dstAttr._1, d.srcId, r.nextFloat, -1));
-              d.sendToSrc((d.srcAttr._1, d.dstId, r.nextFloat, -1));
-            }
-          },
-          (a,b) => (if (a._1 == 1) a else if (b._1 == 1) b else if (a._3 > b._3) a else b)
-      )
-      var g2 = Graph(v_propose, g.edges)
-      //propose and accept
-      v_propose = g2.aggregateMessages[(Int, Long, Float, Int)]( //(status, from, value, 0or1)
-        d => {
-          if (d.dstAttr._1 == 1 || d.srcAttr._1 == 1) { // vertex used
-            d.sendToDst((d.dstAttr._1, d.dstAttr._2, -1F, -1));
-            d.sendToSrc((d.srcAttr._1, d.srcAttr._2, -1F, -1));
-          } else {
-            d.sendToDst(if (d.srcAttr._2 == d.dstId) (d.dstAttr._1, d.srcId, r.nextFloat, r.nextInt(2)) else (d.dstAttr._1, -1L, 1.1F, r.nextInt(2)))
-            d.sendToSrc(if (d.dstAttr._2 == d.srcId) (d.srcAttr._1, d.dstId, r.nextFloat, r.nextInt(2)) else (d.srcAttr._1, -1L, 1.1F, r.nextInt(2)))
-            }
-        },
-        (a,b) => (if (a._1 == 1) a else if (b._1 == 1) b else if ((a._3) < (b._3)) (b) else (a) ) //select
-      )
-      g2 = Graph(v_propose, g.edges)
-      //fitler edges
-      var v_deactivate = g2.aggregateMessages[(Int, Long)]( //(status, otherVertex)
-        d => {
-          if (d.dstAttr._1 == 0 && d.srcAttr._1 == 0){ //not selected vertices
-              if ((d.srcId == d.dstAttr._2) && (d.dstAttr._4 == 1) && (d.srcAttr._4 == 0)) { //from src to dst
-                d.sendToDst(1, d.srcId);
-                d.sendToSrc(1, d.dstId);
-                } else if ((d.dstId == d.srcAttr._2) && (d.srcAttr._4 == 1) && (d.dstAttr._4 == 0)) { //from dst to src
-                d.sendToDst(1, d.srcId);
-                d.sendToSrc(1, d.dstId);
-                } else {
-                d.sendToDst(0, -1L);
-                d.sendToSrc(0, -1L);
-              }
-          }
-          else { //selected vertices
-            d.sendToDst(d.dstAttr._1, d.dstAttr._2); //keep track of the vertices from
-            d.sendToSrc(d.srcAttr._1, d.dstAttr._2);
-            }
-        },
-        (a,b) => (if (a._1 == 0) b else a)
-      )
-      v_deactivate.collect()
-      g = Graph(v_deactivate, g.edges)
-      g.cache()
-      active_v = g.vertices.filter({case (id, x) => (x._1 == 0)}).count()
-    }
-    /* relabeled the edge that is selected
-    
-    val v_in = result.vertices.filter({case (id, x) => (x._1 == 1)}).collect()
-    for (x <- v_in){
-      result = result.mapEdges(
-       id => if ((id.srcId == x._2._2 && id.dstId == x._1) || (id.dstId == x._2._2 && id.srcId == x._1)) (1) else (id.attr)
-       )
-    }
-	*/
-    return g
-  }
-  */
-  
-  def LubyMIS(g_in: Graph[Double, Int]): Graph[(Double), (Int, Double)] = {
+  def LubyMIS(g_in: Graph[Float, Int]): Graph[(Float, Float), (Int, Float, Float)] = {
     var active_v = 2L
     var counter = 0
     val r = scala.util.Random
-    var g = g_in.mapEdges((i) => (-1, -1D)).mapVertices((id, i) => (-1D)) //[(float),(status, float)]
+    var g = g_in.mapEdges((i) => (-1, -1F, -1F)).mapVertices((id, i) => (-1F, -1F)) //[(float),(status, float)]
 	/*
 		active = -1
 		deactivate = 0
@@ -105,29 +28,29 @@ object main{
 	*/
     while (active_v >= 1) { // remaining edges
 	  counter += 1
-      g = g.mapEdges((i) => (i.attr._1, r.nextFloat)) //give active edges random number
-      var v_in = g.aggregateMessages[(Double)]( 
+      g = g.mapEdges((i) => (i.attr._1, r.nextFloat, r.nextFloat)) //give active edges random number
+      var v_in = g.aggregateMessages[(Float, Float)]( 
         d => { // Map Function
 			if (d.attr._1 == 1 || d.attr._1 == 0) { //edge is already deactive
-				d.sendToDst(d.attr._1); //mark deactive
-				d.sendToSrc(d.attr._1);
+				d.sendToDst(d.attr._1,d.attr._1); //mark deactive
+				d.sendToSrc(d.attr._1, d.attr._1);
 			} else {
-	            d.sendToDst(d.attr._2);
-	            d.sendToSrc(d.attr._2);
+	            d.sendToDst(d.attr._2, d.attr._3);
+	            d.sendToSrc(d.attr._2, d.attr._3);
 			}
            
           },
-          (a,b) => (math.max(a,b))//take the max (not active = 1)
+          (a,b) => (if (a._1 > b._1) a else b)//take the max (not active = 1)
       )
       var g2 = Graph(v_in, g.edges) 
     
 	  
 	  //produce new edges
 	  var n_edges = g2.triplets.map(
-		  t => {if ((t.attr._1) == 1 || (t.attr._1) == 0) {Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2));} //remain
-		  		else if ((t.srcAttr == 1D) || ( t.dstAttr == 1D)) {Edge(t.srcId, t.dstId,(0, t.attr._2));} 
+		  t => {if ((t.attr._1) == 1 || (t.attr._1) == 0) {Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2, t.attr._3));} //remain
+		  		else if ((t.srcAttr == 1D) || ( t.dstAttr == 1D)) {Edge(t.srcId, t.dstId,(0, t.attr._2, t.attr._3));} 
 				else {// (0,0), (0, -1), (-1,-1)
-						if (t.srcAttr == t.dstAttr) (Edge(t.srcId, t.dstId,(1, t.attr._2))) else (Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2)))
+						if (t.srcAttr == t.dstAttr) (Edge(t.srcId, t.dstId,(1, t.attr._2, t.attr._3))) else (Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2, t.attr._3)))
 		  		}
 	  	  }
   		)
@@ -161,7 +84,7 @@ object main{
 
     val startTimeMillis = System.currentTimeMillis()
     val edges = sc.textFile(args(0)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
-    val g = Graph.fromEdges[Double, Int](edges, 0, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
+    val g = Graph.fromEdges[Float, Int](edges, 0, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
     var g2 = LubyMIS(g)
 	val ans = g2.mapEdges((i) => i.attr._1)
 	
