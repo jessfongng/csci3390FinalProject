@@ -9,7 +9,7 @@ For the final project, you are provided 6 CSV files, each containing an undirect
 | twitter_original_edges.csv    | 63555749                     |-| - | -|
 | soc-LiveJournal1.csv          | 42851237                     |-| - | -|
 | soc-pokec-relationships.csv   | 22301964                     |-| - | 1668|
-| musae_ENGB_edges.csv          | 35324                        |2294| CPU | 9|
+| musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
 Your goal is to compute a matching as large as possible for each graph. 
