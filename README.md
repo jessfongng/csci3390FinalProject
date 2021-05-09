@@ -64,14 +64,16 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 
 * We are using a modification of Bidding Variant of the Luby. The pseudocode shows below. 
 ```
-R = null
-while there is active edges:
- for each edges e:
+R = {}
+while (there is active edges) {
+ for each edges e {
   generate a random number b_e = \[0, 1)
   send b_e to each vertices
   if b_e is equal on both vertices 
     add the edge e to R
   If e is added to R, deactivate neighbor edges
+  }
+}
 ```
 
 ## Grading policy
