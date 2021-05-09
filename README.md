@@ -1,5 +1,5 @@
 # Large Scale Data Processing: Final Project
-## Authors: Jessica Fong Ng & Qingwei Meng`
+## Authors: Jessica Fong Ng & Qingwei Meng
 ## Graph matching
 For the final project, you are provided 6 CSV files, each containing an undirected graph, which can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). The files are as follows:  
 
@@ -8,7 +8,7 @@ For the final project, you are provided 6 CSV files, each containing an undirect
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
 | twitter_original_edges.csv    | 63555749                     |-| - | -|
 | soc-LiveJournal1.csv          | 42851237                     |-| - | -|
-| soc-pokec-relationships.csv   | 22301964                     |-| - | -|
+| soc-pokec-relationships.csv   | 22301964                     |-| - | 1668|
 | musae_ENGB_edges.csv          | 35324                        |2294| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
@@ -30,23 +30,25 @@ For the final project, you will need to write everything from scratch. Feel free
 ```
 sbt clean package
 ```  
-The function accetps 2 file path as arguments, the first being the path to the file containing the initial graph and the second being the path to output graph.  It can be ran locally with the following command (keep in mind that your file paths may be different):
+The function accetps 2 file path as arguments, the first being the path to the file containing the initial graph and the second being the path to output.  It can be ran locally with the following command (keep in mind that your file paths may be different):
 ```
 //Linux
-spark-submit --class final_project.main --master local[*] target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output_graph]
+spark-submit --class final_project.main --master local[*] target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output]
 
 //Unix
-spark-submit --class "final_project.main" --master "local[*]" target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output_graph]
+spark-submit --class "final_project.main" --master "local[*]" target/scala-2.12/final_project_2.12-1.0.jar [path_to_input_graph] [path_to_output]
 
 ```
 
 The verifier accepts 2 file paths as arguments, the first being the path to the file containing the initial graph and the second being the path to the file containing the matching. It can be ran locally with the following command (keep in mind that your file paths may be different):
 ```
 // Linux
-spark-submit --class final_project.verifier --master local[*] --class final_project.verifier data/log_normal_100.csv data/log_normal_100_matching.csv
+spark-submit --master local[*] --class final_project.verifier target/scala-2.12/final_project_2.12-1.0.jar graph.csv log_normal_result/matching.csv/
+
 
 // Unix
-spark-submit --class "final_project.verifier" --master "local[*]" --class "final_project.verifier" data/log_normal_100.csv data/log_normal_100_matching.csv
+spark-submit --master local[*] --class "final_project.verifier" target/scala-2.12/final_project_2.12-1.0.jar graph.csv log_normal_result/matching.csv/
+
 ```
 
 ## Deliverables
