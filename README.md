@@ -75,6 +75,20 @@ while (there is active edges) {
   }
 }
 ```
+There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
+|           File name           |        Number of edges       |       Method of Random Number       | # Bits (only consider the type of the number)|
+| ------------------------------| ---------------------------- | ---------------------- | ---------------------- |
+| log_normal_100.csv| 2671  | Float| 32|
+| musae_ENGB_edges.csv | 35324 | Float | 32| 
+| soc-pokec-relationships.csv | 22301964 | Double | 64|
+| soc-LiveJournal1.csv | 42851237 | (Double, Double)| 128|
+| twitter_original_edges.csv | 63555749 | (Double, Double)| 128|
+| com-orkut.ungraph.csv | 117185083 | -| -|
+It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. 
+
+* Advantage 
+
+
 
 ## Grading policy
 * Quality of matchings (40%)
