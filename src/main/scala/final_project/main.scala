@@ -39,7 +39,6 @@ object main{
           (a,b) => (if (a._1 == 1) a else if (b._1 == 1) b else if (a._3 > b._3) a else b)
       )
       var g2 = Graph(v_propose, g.edges)
-
       //propose and accept
       v_propose = g2.aggregateMessages[(Int, Long, Float, Int)]( //(status, from, value, 0or1)
         d => {
@@ -54,7 +53,6 @@ object main{
         (a,b) => (if (a._1 == 1) a else if (b._1 == 1) b else if ((a._3) < (b._3)) (b) else (a) ) //select
       )
       g2 = Graph(v_propose, g.edges)
-
       //fitler edges
       var v_deactivate = g2.aggregateMessages[(Int, Long)]( //(status, otherVertex)
         d => {
@@ -69,7 +67,6 @@ object main{
                 d.sendToDst(0, -1L);
                 d.sendToSrc(0, -1L);
               }
-
           }
           else { //selected vertices
             d.sendToDst(d.dstAttr._1, d.dstAttr._2); //keep track of the vertices from
@@ -83,7 +80,6 @@ object main{
       g.cache()
       active_v = g.vertices.filter({case (id, x) => (x._1 == 0)}).count()
     }
-
     /* relabeled the edge that is selected
     
     val v_in = result.vertices.filter({case (id, x) => (x._1 == 1)}).collect()
@@ -93,73 +89,53 @@ object main{
        )
     }
 	*/
-
     return g
   }
   */
   
-  def LubyMIS(g_in: Graph[Float, Int]): Graph[(Float, Long), (Int, Float)] = {
+  def LubyMIS(g_in: Graph[Float, Int]): Graph[(Float), (Int, Float)] = {
     var active_v = 2L
     var counter = 0
     val r = scala.util.Random
-    var g = g_in.mapEdges((i) => (-1, 0F)).mapVertices((id, i) => (-1F, 0L)) //[(float, to),(status, float)]
+    var g = g_in.mapEdges((i) => (-1, 0F)).mapVertices((id, i) => (-1F)) //[(float),(status, float)]
 	/*
 		active = -1
 		deactivate = 0
 		selected = 1
 	*/
-    while (active_v > 1) { // remaining edges
+    while (active_v >= 1) { // remaining edges
 	  counter += 1
       g = g.mapEdges((i) => (i.attr._1, r.nextFloat)) //give active edges random number
-      var v_in = g.aggregateMessages[(Float, Long)]( 
+      var v_in = g.aggregateMessages[(Float)]( 
         d => { // Map Function
 			if (d.attr._1 == 1 || d.attr._1 == 0) { //edge is already deactive
-				d.sendToDst(d.attr._1, d.dstAttr._2); 
-				d.sendToSrc(d.attr._1, d.srcAttr._2);
+				d.sendToDst(d.attr._1); //mark deactive
+				d.sendToSrc(d.attr._1);
 			} else {
-	            d.sendToDst(d.attr._2, 0L);
-	            d.sendToSrc(d.attr._2, 0L);
+	            d.sendToDst(d.attr._2);
+	            d.sendToSrc(d.attr._2);
 			}
            
           },
-          (a,b) => (if (a._1 > b._1) a else b)//take the max (not active = 1)
+          (a,b) => (math.max(a,b))//take the max (not active = 1)
       )
       var g2 = Graph(v_in, g.edges) 
     
 	  
 	  //produce new edges
 	  var n_edges = g2.triplets.map(
-		  t => {if ((t.attr._1) == 1) {Edge(t.srcId, t.dstId,(1, t.attr._2));}
-		  		else if ((t.srcAttr._1 == 1) || ( t.dstAttr._1 == 1)) {Edge(t.srcId, t.dstId,(0, t.attr._2));}
-				else {
-		  			if (t.srcAttr._1 == t.dstAttr._1) (Edge(t.srcId, t.dstId,(1, t.attr._2))) else (Edge(t.srcId, t.dstId,(-1, t.attr._2)))
+		  t => {if ((t.attr._1) == 1 || (t.attr._1) == 0) {Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2));} //remain
+		  		else if ((t.srcAttr == 1F) || ( t.dstAttr == 1F)) {Edge(t.srcId, t.dstId,(0, t.attr._2));} 
+				else {// (0,0), (0, -1), (-1,-1)
+						if (t.srcAttr == t.dstAttr) (Edge(t.srcId, t.dstId,(1, t.attr._2))) else (Edge(t.srcId, t.dstId,(t.attr._1, t.attr._2)))
 		  		}
 	  	  }
   		)
-		
-  	  var v_deactivate = g2.aggregateMessages[(Float, Long)]( //return neighbors of selected
-          d => {
-  			if (d.attr._1 == 1 || d.attr._1 == 0) { //edge is already deactive
-  				d.sendToDst(d.attr._1, d.dstAttr._2); 
-  				d.sendToSrc(d.attr._1, d.srcAttr._2);
-  			} else {
-  				if (d.dstAttr._1 == d.srcAttr._1) { //selected 
-  					d.sendToDst(1F, d.srcId);
-  					d.sendToSrc(1F, d.dstId);
-  				} else {
-  					d.sendToDst(-1F, 0L);
-  					d.sendToSrc(-1F, 0L);
-  				}
-  			}
-			
-              },
-              (a,b) => (if (a._1 > b._1) a else b) 
-        )
 
-      g = Graph(v_deactivate, n_edges)
+      g = Graph(g2.vertices, n_edges)
 
       g.cache()
-      active_v = g.vertices.filter({case (id, i) => (i._1 == -1F)} ).count()
+      active_v = g.edges.filter({case (i) => (i.attr._1 == -1)} ).count()
       println("***********************************************")
       println("Iteration# =" + counter + "remaining vertices = " + active_v)
       println("***********************************************")
@@ -168,7 +144,6 @@ object main{
     println("#Iteration = " + counter)
     println("***********************************************")
 	
-
     return g
   }
 
@@ -188,7 +163,7 @@ object main{
     val edges = sc.textFile(args(0)).map(line => {val x = line.split(","); Edge(x(0).toLong, x(1).toLong , 1)} )
     val g = Graph.fromEdges[Float, Int](edges, 0F, edgeStorageLevel = StorageLevel.MEMORY_AND_DISK, vertexStorageLevel = StorageLevel.MEMORY_AND_DISK)
     var g2 = LubyMIS(g)
-	val ans = g2.mapEdges((i) => i.attr._1).mapVertices((id, i) => i._1)
+	val ans = g2.mapEdges((i) => i.attr._1)
 	
 
     val endTimeMillis = System.currentTimeMillis()
