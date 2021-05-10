@@ -94,7 +94,7 @@ To avoid creating a line graph to run Luby algorithm, we modified the algorithm 
 | soc-pokec-relationships.csv   | 22301964                     |598356| 4x3 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2283| 4x3 N1 core CPU in GCP | 15|
 | log_normal_100.csv            | 2671                         | 49| 4x3 N1 core CPU in GCP | 15|
-* _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table._
+* _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala. We were not able to run `com-orkut.ungraph.csv` and `soc-LiveJournal1.csv` on time, thus the result and corresponding data is not included in the table._
 * The `(Double, Double)` randomized variable increase the required memory, and decrease the probability that the two values of two vertices (of one edge) to be the same. Thus, the running time on graph with smaller edges, such as `log_normal_100.csv` and `musae_ENGB_edges.csv` increases. The result of #matching does not vary much with `(Float)` as randomized variable. 
 ### Idea of Augmenting paths (Planned but Unfinished)
 We would use our personalized algorithm to augment along the paths. Supposed we want to delete the augmenting paths with length k
@@ -115,7 +115,7 @@ In this algorithm, we randomly find paths with length k and check if it is an au
 1. This algorithm is relative easy to implement and easy to understand(Compared with Blossom Algorithm).
 2. This algorithm can expectedly delete 64% of augmenting paths with length k, for k<14. If the user wants to delete more augmenting paths, he just needs to repeat more iterations.
 
-2 is true because, according to the graphing calculator, for n<14, 
+2 is true because, according to the graphing calculator, for n <14 
 
 <img src="https://render.githubusercontent.com/render/math?math=1-(\frac{1}{n^n})^{n^n} \approx 0.64">
 
