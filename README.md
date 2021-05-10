@@ -9,7 +9,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
 | twitter_original_edges.csv    | 63555749                     |-| - | -|
 | soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
-| soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
+| soc-pokec-relationships.csv   | 22301964                     |598356| 4x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
@@ -91,11 +91,11 @@ while (there is active edges) {
 * It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. The running time of each case is shown in the [Result](#Result). If we were to compile all of the files using `(Doube,Double)`, the running time of each file is shown below.  
  
 
-|           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)| 
+|           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
 | twitter_original_edges.csv    | 63555749                     |-| - | -|
-| soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
