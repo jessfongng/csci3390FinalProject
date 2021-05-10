@@ -1,7 +1,7 @@
 # Large Scale Data Processing: Final Project
 ## Authors: Jessica Fong Ng & Qingwei Meng
 ## Graph matching
-The project implements a variation of the Bidding Variant of the Luby algorithm to find a maximal matching. The graphs that we used to generate these result can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). 
+The project implements a variation of the Bidding Variant of the Luby algorithm to find a maximal matching. The graphs that we used to generate these result can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). We have algorithms for augmenting paths, but we did not implement that due to time constraint. But we will still discuss this algorithm in our report.
 ### Result
 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
@@ -90,7 +90,7 @@ To avoid creating a line graph to run Luby algorithm, we modified the algorithm 
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
 | twitter_original_edges.csv    | 63555749                     |92319| 4x3 N1 core CPU in GCP | 5072|
-| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | 4x3 N1 core CPU in GCP|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 4x3 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2283| 4x3 N1 core CPU in GCP | 15|
 | log_normal_100.csv            | 2671                         | 49| 4x3 N1 core CPU in GCP | 15|
