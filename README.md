@@ -7,11 +7,11 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| 4 x 3 N1 core CPU in GCP| 5072|
-| soc-LiveJournal1.csv          | 42851237                     |-| 4 x 3 N1 core CPU in GCP | -|
-| soc-pokec-relationships.csv   | 22301964                     |598356| 2x4 N1 core CPU in GCP | 2793|
+| twitter_original_edges.csv    | 63555749                     |-| - | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
+| soc-pokec-relationships.csv   | 22301964                     |598356| 4x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
-| log_normal_100.csv            | 2671                         | 48| CPU | 5|
+| log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
 All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. 
 
@@ -56,7 +56,12 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 ## Report
 * The output file (matching) for each test case.
   * For naming conventions, if the input file is `XXX.csv`, please name the output file `XXX_matching.csv`.
-* Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
+  * You'll need to compress the output files into a single ZIP or TAR file before pushing to GitHub. If they're still too large, you can upload the files to Google Drive and include the sharing link in your report.
+
+* A project report that includes the following:
+  * A table containing the size of the matching you obtained for each test case. The sizes must correspond to the matchings in your output files.
+  * An estimate of the amount of computation used for each test case. For example, "the program runs for 15 minutes on a 2x4 N1 core CPU in GCP." If you happen to be executing mulitple algorithms on a test case, report the total running time.
+  * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
 ### Implementation of Bidding Variant of Luby Algorithm
 * We are using a modification of Bidding Variant of Luby Algorithm. The pseudocode is shown below. 
@@ -71,7 +76,6 @@ while (there is active edges) {
   If e is added to R, deactivate neighbor edges
   }
 }
-return R
 ```
 * There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
 
@@ -90,13 +94,44 @@ return R
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| 4 x 3 N1 core CPU in GCP| 5072|
-| soc-LiveJournal1.csv          | 42851237                     |-| 4 x 3 N1 core CPU in GCP| - |
-| soc-pokec-relationships.csv   | 22301964                     |598356| 2x4 N1 core CPU in GCP | 2793|
-| musae_ENGB_edges.csv          | 35324                        |2283| 2x4 N1 core CPU in GCP | 15|
-| log_normal_100.csv            | 2671                         | 49| 2x4 N1 core CPU in GCP | 15|
+| twitter_original_edges.csv    | 63555749                     |-| - | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
+| soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
+| musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
+| log_normal_100.csv            | 2671                         | 38| CPU | 5|
 * _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala_.
+### Idea of Augmenting paths (Planned but Unfinished)
+We would use our personalized algorithm to augment along the paths. Supposed we want to delete the augmenting paths with length k
+```
+repeat k^k iterations{
+ Generate a random integer for each vertex from the set {0,1,...,k}
+ Find every path p such that its vertices form the pattern (0,1,...,k)
+ If p is an augmenting path:
+  augment along p
+}
+```
+In this algorithm, we randomly find paths with length k and check if it is an augmenting path. If it is, we augment along it. 
+### Advantages and Novelties 
+#### Bidding Variant of Luby's Algorithm
+1. It terminates in O(log n) rounds with probablity <img src="https://render.githubusercontent.com/render/math?math=1-\frac{1}{n^2}">, which means that this algorithm has a good chance to finish in limited rounds.
+2. Our version of Luby's Algorithm does not create a new line graph, which saves half of the spaces.
+#### Algorithm for the Augmenting paths
+1. This algorithm is relative easy to implement and easy to understand(Compared with Blossom Algorithm).
+2. This algorithm can expectedly delete 64% of augmenting paths with length k, for k<14. If the user wants to delete more augmenting paths, he just needs to repeat more iterations.
 
-### Advantage 
+2 is true because, according to the graphing calculator, 
 
+<img src="https://render.githubusercontent.com/render/math?math=1-(\frac{1}{n^n})^{n^n} \approx 0.64">
+
+## Grading policy
+* Quality of matchings (40%)
+  * For each test case, you'll receive at least 70% of full credit if your matching size is at least half of the best answer in the class.
+  * **You will receive a 0 for any case where the verifier does not confirm that your output is a matching.** Please do not upload any output files that do not pass the verifier.
+* Project report (35%)
+  * Your report grade will be evaluated using the following criteria:
+    * Discussion of the merits of your algorithms
+    * Depth of technicality
+    * Novelty
+    * Completeness
+    * Readability
 
