@@ -11,7 +11,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 4x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
-| log_normal_100.csv            | 2671                         | 38| CPU | 5|
+| log_normal_100.csv            | 2671                         | 48| CPU | 5|
 
 All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table.
 
@@ -54,9 +54,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 ```
 
 ## Report
-* The output file (matching) for each test case.
-  * For naming conventions, if the input file is `XXX.csv`, please name the output file `XXX_matching.csv`.
-  * You'll need to compress the output files into a single ZIP or TAR file before pushing to GitHub. If they're still too large, you can upload the files to Google Drive and include the sharing link in your report.
+* For naming conventions, if the input file is `XXX.csv`, please name the output file `XXX_matching.csv`.
 
 * A project report that includes the following:
   * A table containing the size of the matching you obtained for each test case. The sizes must correspond to the matchings in your output files.
@@ -70,13 +68,16 @@ R = {}
 while (there is active edges) {
  for each edges e {
   generate a random number b_e = [0, 1)
-  send b_e to each vertices
+  send b_e to each vertices, vertices accept the largest b_e value
   if b_e is equal on both vertices 
     add the edge e to R
   If e is added to R, deactivate neighbor edges
   }
 }
 ```
+#### Identify edges with maximum value
+In order to avoid creating a line graph to run Luby algorithm, we modified the algorithm such that each edge generates a random value, and send it to its vertices. The vertices will only keep the largest value. Thus, if two vertices on the same edge retain the same randomize variable, then this edge has the largest value among its neighbor. We used `status = {1, 0, -1}` to denote each state of the edge and the vertices. `1` represents that the edge/vertex is included in the final matching, `0` means the edge/vertex is a neighbor of selected, and `1` means it is still an active edge/vertex. 
+
 * There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
 
 |           File name           |        Number of edges       |       Method of Random Number       | # Bits (only consider the type of the number)|
@@ -94,13 +95,13 @@ while (there is active edges) {
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| - | -|
-| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
-| soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
-| musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
-| log_normal_100.csv            | 2671                         | 38| CPU | 5|
+| twitter_original_edges.csv    | 63555749                     |92319| 4x3 N1 core CPU in GCP | 5072|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | 4x3 N1 core CPU in GCP|
+| soc-pokec-relationships.csv   | 22301964                     |598356| 4x3 N1 core CPU in GCP | 2793|
+| musae_ENGB_edges.csv          | 35324                        |2283| 4x3 N1 core CPU in GCP | 15|
+| log_normal_100.csv            | 2671                         | 49| 4x3 N1 core CPU in GCP | 15|
 * _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table._
-* 
+* The `(Double, Double)` randomized variable increase the required memory, and decrease the probability that the two values of two vertices (of one edge) to be the same. Thus, the running time on graph with smaller edges, such as `log_normal_100.csv` and `musae_ENGB_edges.csv` increases. The result of #matching does not vary much with `(Float)` as randomized variable. 
 ### Idea of Augmenting paths (Planned but Unfinished)
 We would use our personalized algorithm to augment along the paths. Supposed we want to delete the augmenting paths with length k
 ```
