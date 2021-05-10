@@ -13,8 +13,9 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
-All files had been verified through the verifier. They are contained in a `csci3390_final_project_JFQM_result.zip` in the github repository. 
+All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. 
 
+## About the Program
 ### Input format
 Each input file consists of multiple lines, where each line contains 2 numbers that denote an undirected edge. For example, the input below is a graph with 3 edges.  
 1,2  
