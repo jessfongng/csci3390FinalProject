@@ -7,7 +7,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| - | -|
+| twitter_original_edges.csv    | 63555749                     |92319| 4x3 N1 core CPU in GCP | 5072|
 | soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 4x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
