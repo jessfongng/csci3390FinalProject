@@ -11,7 +11,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 2x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
-| log_normal_100.csv            | 2671                         | 38| CPU | 5|
+| log_normal_100.csv            | 2671                         | 48| CPU | 5|
 
 All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. 
 
