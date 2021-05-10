@@ -78,6 +78,7 @@ while (there is active edges) {
 #### Identify edges with maximum value
 In order to avoid creating a line graph to run Luby algorithm, we modified the algorithm such that each edge generates a random value, and send it to its vertices. The vertices will only keep the largest value. Thus, if two vertices on the same edge retain the same randomize variable, then this edge has the largest value among its neighbor. We used `status = {1, 0, -1}` to denote each state of the edge and the vertices. `1` represents that the edge/vertex is included in the final matching, `0` means the edge/vertex is a neighbor of selected, and `1` means it is still an active edge/vertex. 
 
+#### Difficulties
 * There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
 
 |           File name           |        Number of edges       |       Method of Random Number       | # Bits (only consider the type of the number)|
