@@ -13,7 +13,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 48| CPU | 5|
 
-All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table.
+All files had been verified through the verifier. They are contained in the `result.zip` located at the github repository. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table.
 
 ## About the Program
 ### Input format
