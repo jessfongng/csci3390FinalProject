@@ -1,7 +1,7 @@
 # Large Scale Data Processing: Final Project
 ## Authors: Jessica Fong Ng & Qingwei Meng
 ## Graph matching
-The project implements a variation of the Bidding Variant of the Luby algorithm to find a maximal matching. The graphs that we used to generate these result can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). We have algorithms for augmenting paths, but we did not implement that due to time constraint. But we will still discuss this algorithm in our report.
+The project implements a variation of the Bidding Variant of the Luby algorithm to find a maximal matching. The graphs that we used to generate these result can be found [here](https://drive.google.com/file/d/1khb-PXodUl82htpyWLMGGNrx-IzC55w8/view?usp=sharing). 
 ### Result
 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
@@ -72,7 +72,7 @@ while (there is active edges) {
 To avoid creating a line graph to run Luby algorithm, we modified the algorithm such that each edge generates a random value, and send it to its vertices. The vertices will only keep the largest value. Thus, if two vertices on the same edge retain the same randomize variable, then this edge has the largest value among its neighbor. We used `status = {1, 0, -1}` to denote each state of the edge and the vertices. `1` represents that the edge is included in the final matching, `0` means the edge is a neighbor of selected, and `1` means it is still an active edge (can be potentially included in the final match). 
 
 #### Difficulties
-* There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
+* There is an implementation problem with assigning random number when applying this algorithm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. The chances of observing this increases with significant large numbers of edges. It can be a problem because if the same float/double is generated to adjacent edges, they both can be part of the final maximal match and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
 
 |           File name           |        Number of edges       |       Method of Random Number       | # Bits (only consider the type of the number)|
 | ------------------------------| ---------------------------- | ---------------------- | ---------------------- |
@@ -90,7 +90,7 @@ To avoid creating a line graph to run Luby algorithm, we modified the algorithm 
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
 | twitter_original_edges.csv    | 63555749                     |92319| 4x3 N1 core CPU in GCP | 5072|
-| soc-LiveJournal1.csv          | 42851237                     |-| - | 4x3 N1 core CPU in GCP|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 4x3 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2283| 4x3 N1 core CPU in GCP | 15|
 | log_normal_100.csv            | 2671                         | 49| 4x3 N1 core CPU in GCP | 15|
