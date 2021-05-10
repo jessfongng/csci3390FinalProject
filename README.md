@@ -7,8 +7,8 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| - | -|
-| soc-LiveJournal1.csv          | 42851237                     |-| 3x4 N1 core CPU in GCP | -|
+| twitter_original_edges.csv    | 63555749                     |-| 4 x 3 N1 core CPU in GCP| -|
+| soc-LiveJournal1.csv          | 42851237                     |-| 4 x 3 N1 core CPU in GCP | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 2x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 48| CPU | 5|
@@ -56,12 +56,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 ## Report
 * The output file (matching) for each test case.
   * For naming conventions, if the input file is `XXX.csv`, please name the output file `XXX_matching.csv`.
-  * You'll need to compress the output files into a single ZIP or TAR file before pushing to GitHub. If they're still too large, you can upload the files to Google Drive and include the sharing link in your report.
-
-* A project report that includes the following:
-  * A table containing the size of the matching you obtained for each test case. The sizes must correspond to the matchings in your output files.
-  * An estimate of the amount of computation used for each test case. For example, "the program runs for 15 minutes on a 2x4 N1 core CPU in GCP." If you happen to be executing mulitple algorithms on a test case, report the total running time.
-  * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
+* Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
 ### Implementation of Bidding Variant of Luby Algorithm
 * We are using a modification of Bidding Variant of Luby Algorithm. The pseudocode is shown below. 
@@ -95,8 +90,8 @@ return R
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
 | com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
-| twitter_original_edges.csv    | 63555749                     |-| - | -|
-| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
+| twitter_original_edges.csv    | 63555749                     |-| - | 4 x 3 N1 core CPU in GCP|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | 4 x 3 N1 core CPU in GCP|
 | soc-pokec-relationships.csv   | 22301964                     |598356| 2x4 N1 core CPU in GCP | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2283| 2x4 N1 core CPU in GCP | 15|
 | log_normal_100.csv            | 2671                         | 49| 2x4 N1 core CPU in GCP | 15|
@@ -104,17 +99,4 @@ return R
 
 ### Advantage 
 
-
-
-## Grading policy
-* Quality of matchings (40%)
-  * For each test case, you'll receive at least 70% of full credit if your matching size is at least half of the best answer in the class.
-  * **You will receive a 0 for any case where the verifier does not confirm that your output is a matching.** Please do not upload any output files that do not pass the verifier.
-* Project report (35%)
-  * Your report grade will be evaluated using the following criteria:
-    * Discussion of the merits of your algorithms
-    * Depth of technicality
-    * Novelty
-    * Completeness
-    * Readability
 
