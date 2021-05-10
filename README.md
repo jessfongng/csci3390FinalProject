@@ -54,13 +54,6 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
 ```
 
 ## Report
-* For naming conventions, if the input file is `XXX.csv`, please name the output file `XXX_matching.csv`.
-
-* A project report that includes the following:
-  * A table containing the size of the matching you obtained for each test case. The sizes must correspond to the matchings in your output files.
-  * An estimate of the amount of computation used for each test case. For example, "the program runs for 15 minutes on a 2x4 N1 core CPU in GCP." If you happen to be executing mulitple algorithms on a test case, report the total running time.
-  * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
-  * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
 ### Implementation of Bidding Variant of Luby Algorithm
 * We are using a modification of Bidding Variant of Luby Algorithm. The pseudocode is shown below. 
 ```
@@ -76,7 +69,7 @@ while (there is active edges) {
 }
 ```
 #### Identify edges with maximum value
-In order to avoid creating a line graph to run Luby algorithm, we modified the algorithm such that each edge generates a random value, and send it to its vertices. The vertices will only keep the largest value. Thus, if two vertices on the same edge retain the same randomize variable, then this edge has the largest value among its neighbor. We used `status = {1, 0, -1}` to denote each state of the edge and the vertices. `1` represents that the edge/vertex is included in the final matching, `0` means the edge/vertex is a neighbor of selected, and `1` means it is still an active edge/vertex. 
+To avoid creating a line graph to run Luby algorithm, we modified the algorithm such that each edge generates a random value, and send it to its vertices. The vertices will only keep the largest value. Thus, if two vertices on the same edge retain the same randomize variable, then this edge has the largest value among its neighbor. We used `status = {1, 0, -1}` to denote each state of the edge and the vertices. `1` represents that the edge/vertex is included in the final matching, `0` means the edge/vertex is a neighbor of selected, and `1` means it is still an active edge/vertex. 
 
 #### Difficulties
 * There is an implementation problem with assigning random number when applying this alogirhtm on a large data set. If `b_e` is a type float (32 bits), there is 1/(10^8) chances of generating same float, and with double (64 bits), there is 1/(10^16) chances of generating the same double. It can be a problem because if the same float/double is generated to adjacent edges, they both can be activated and violate the maximal match definition. The following table shows the different strageties to generate the random numbers for Luby algorithm with different edge sizes.
