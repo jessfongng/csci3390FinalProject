@@ -115,7 +115,7 @@ In this algorithm, we randomly find paths with length k and check if it is an au
 1. This algorithm is relative easy to implement and easy to understand(Compared with Blossom Algorithm).
 2. This algorithm can expectedly delete 64% of augmenting paths with length k, for k<14. If the user wants to delete more augmenting paths, he just needs to repeat more iterations.
 
-2 is true because, according to the graphing calculator, for n <14 
+2 is true because, according to the graphing calculator, for n<14, 
 
 <img src="https://render.githubusercontent.com/render/math?math=1-(\frac{1}{n^n})^{n^n} \approx 0.64">
 
