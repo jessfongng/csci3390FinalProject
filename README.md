@@ -97,8 +97,8 @@ while (there is active edges) {
 | twitter_original_edges.csv    | 63555749                     |-| - | -|
 | soc-LiveJournal1.csv          | 42851237                     |-| - | -|
 | soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
-| musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
-| log_normal_100.csv            | 2671                         | 38| CPU | 5|
+| musae_ENGB_edges.csv          | 35324                        |2283| CPU | 15|
+| log_normal_100.csv            | 2671                         | 38| CPU | 15|
 * _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala_.
 
 ### Advantage 
