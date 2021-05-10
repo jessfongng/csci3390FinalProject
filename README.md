@@ -87,7 +87,17 @@ while (there is active edges) {
 | twitter_original_edges.csv | 63555749 | (Double, Double)| 128|
 | com-orkut.ungraph.csv | 117185083 | -| -|
 
-* It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. 
+* It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. The running time of each case is shown in the [Result] (#Result) If we were to compile all of the files using `(Doube,Double)`, the running time of each file is shown below.  _We physically change the variable type in the code, thus only the (Double, Double) type is shown in the main.scala_. 
+
+|           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
+| ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
+| com-orkut.ungraph.csv         | 117185083                    |-                       | -       | -          |
+| twitter_original_edges.csv    | 63555749                     |-| - | -|
+| soc-LiveJournal1.csv          | 42851237                     |-| - | -|
+| soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
+| musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
+| log_normal_100.csv            | 2671                         | 38| CPU | 5|
+
 
 * Advantage 
 
