@@ -13,7 +13,7 @@ The project implements a variation of the Bidding Variant of the Luby algorithm 
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
 
-All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. 
+All files had been verified through the verifier. They are contained in the `csci3390_final_project_JFQM_result.zip` located at the github repository. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table.
 
 ## About the Program
 ### Input format
@@ -99,7 +99,8 @@ while (there is active edges) {
 | soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
-* _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala_.
+* _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala. We were not able to run com-orkut.ungraph.csv on time, thus the result and corresponding data is not included in the table._
+* 
 ### Idea of Augmenting paths (Planned but Unfinished)
 We would use our personalized algorithm to augment along the paths. Supposed we want to delete the augmenting paths with length k
 ```
@@ -123,15 +124,4 @@ In this algorithm, we randomly find paths with length k and check if it is an au
 
 <img src="https://render.githubusercontent.com/render/math?math=1-(\frac{1}{n^n})^{n^n} \approx 0.64">
 
-## Grading policy
-* Quality of matchings (40%)
-  * For each test case, you'll receive at least 70% of full credit if your matching size is at least half of the best answer in the class.
-  * **You will receive a 0 for any case where the verifier does not confirm that your output is a matching.** Please do not upload any output files that do not pass the verifier.
-* Project report (35%)
-  * Your report grade will be evaluated using the following criteria:
-    * Discussion of the merits of your algorithms
-    * Depth of technicality
-    * Novelty
-    * Completeness
-    * Readability
 
