@@ -62,7 +62,7 @@ spark-submit --master local[*] --class "final_project.verifier" target/scala-2.1
   * An estimate of the amount of computation used for each test case. For example, "the program runs for 15 minutes on a 2x4 N1 core CPU in GCP." If you happen to be executing mulitple algorithms on a test case, report the total running time.
   * Description(s) of your approach(es) for obtaining the matchings. It is possible to use different approaches for different cases. Please describe each of them as well as your general strategy if you were to receive a new test case.
   * Discussion about the advantages of your algorithm(s). For example, does it guarantee a constraint on the number of shuffling rounds (say `O(log log n)` rounds)? Does it give you an approximation guarantee on the quality of the matching? If your algorithm has such a guarantee, please provide proofs or scholarly references as to why they hold in your report.
-#### Implementatino of Bidding Variant of Luby Algorithm
+### Implementatino of Bidding Variant of Luby Algorithm
 * We are using a modification of Bidding Variant of Luby Algorithm. The pseudocode is shown below. 
 ```
 R = {}
@@ -87,7 +87,8 @@ while (there is active edges) {
 | twitter_original_edges.csv | 63555749 | (Double, Double)| 128|
 | com-orkut.ungraph.csv | 117185083 | -| -|
 
-* It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. The running time of each case is shown in the [Result](#Result). If we were to compile all of the files using `(Doube,Double)`, the running time of each file is shown below.  _We physically change the variable type in the code, thus only the (Double, Double) type is shown in the main.scala_. 
+* It is worth noticed that the #bits needed increase with the number of edges. If we were to receive a new case, we will use these #edges of these files as reference to choose the type of random variable. The running time of each case is shown in the [Result](#Result). If we were to compile all of the files using `(Doube,Double)`, the running time of each file is shown below.  
+ 
 
 |           File name           |        Number of edges       |       # Matching       | Machine| Run time (s)|
 | ------------------------------| ---------------------------- | ---------------------- |--------|-------------|
@@ -97,9 +98,9 @@ while (there is active edges) {
 | soc-pokec-relationships.csv   | 22301964                     |598356| - | 2793|
 | musae_ENGB_edges.csv          | 35324                        |2310| CPU | 9|
 | log_normal_100.csv            | 2671                         | 38| CPU | 5|
+* _Note: We physically change the variable type in the code, thus only the `(Double, Double)` type is shown in the main.scala_.
 
-
-* Advantage 
+### Advantage 
 
 
 
